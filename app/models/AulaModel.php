@@ -6,8 +6,38 @@ class AulaModel {
         $this->conexion = $conexion;
     }
 
-    public function obtenerTodas() {
-        $stmt = $this->conexion->query("SELECT id_aula, nombre_aula, capacidad FROM aulas ORDER BY nombre_aula ASC");
+    // Crear un aula
+    public function crearAula($nombre, $capacidad) {
+        $sql = "INSERT INTO aulas (nombre, capacidad) VALUES (:nombre, :capacidad)";
+        $stmt = $this->conexion->prepare($sql);
+        return $stmt->execute([
+            ':nombre' => $nombre,
+            ':capacidad' => $capacidad
+        ]);
+    }
+
+    // Obtener todas las aulas
+    public function obtenerAulas() {
+        $sql = "SELECT * FROM aulas";
+        $stmt = $this->conexion->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Actualizar un aula
+    public function actualizarAula($id, $nombre, $capacidad) {
+        $sql = "UPDATE aulas SET nombre = :nombre, capacidad = :capacidad WHERE id = :id";
+        $stmt = $this->conexion->prepare($sql);
+        return $stmt->execute([
+            ':nombre' => $nombre,
+            ':capacidad' => $capacidad,
+            ':id' => $id
+        ]);
+    }
+
+    // Eliminar un aula
+    public function eliminarAula($id) {
+        $sql = "DELETE FROM aulas WHERE id = :id";
+        $stmt = $this->conexion->prepare($sql);
+        return $stmt->execute([':id' => $id]);
     }
 }

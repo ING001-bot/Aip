@@ -21,4 +21,10 @@ class EquipoModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /** 🔹 Extra: eliminar equipo */
+    public function eliminarEquipo($id_equipo) {
+        $stmt = $this->db->prepare("DELETE FROM equipos WHERE id_equipo = ?");
+        return $stmt->execute([$id_equipo]);
+    }
 }
