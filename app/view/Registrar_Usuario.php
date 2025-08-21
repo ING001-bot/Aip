@@ -5,28 +5,34 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $rol = $_SESSION['tipo'] ?? null;
 $esAdmin = ($rol === 'Administrador');
+$mensaje = $mensaje ?? ''; // viene desde el controlador
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>👤 Registro</title>
+    <title>👤 <?= $esAdmin ? "Registrar Usuario" : "Crear Cuenta" ?></title>
     <link rel="stylesheet" href="../../Public/css/admin.css">
 </head>
 <body>
-    <h1>👤 <?php echo $esAdmin ? "Registrar Usuario" : "Crear Cuenta"; ?></h1>
+    <h1>👤 <?= $esAdmin ? "Registrar Usuario" : "Crear Cuenta" ?></h1>
+
+    <?php if ($mensaje): ?>
+        <div class="mensaje"><?= htmlspecialchars($mensaje) ?></div>
+    <?php endif; ?>
 
     <div class="tarjeta">
         <form method="post" action="../controllers/UsuarioController.php">
             <label>Nombre:</label>
             <input type="text" name="nombre" required>
+
             <label>Correo:</label>
             <input type="email" name="correo" required>
+
             <label>Contraseña:</label>
             <input type="password" name="contraseña" required minlength="6">
 
             <?php if ($esAdmin): ?>
-                <!-- Solo el admin puede elegir rol -->
                 <label>Tipo de Usuario:</label>
                 <select name="tipo" required>
                     <option value="">-- Selecciona un tipo --</option>
@@ -36,16 +42,11 @@ $esAdmin = ($rol === 'Administrador');
                 </select>
                 <button type="submit" name="registrar_usuario_admin">Registrar Usuario</button>
             <?php else: ?>
-                <!-- Público: por defecto será Profesor -->
                 <button type="submit" name="registrar_profesor_publico">Crear Cuenta</button>
             <?php endif; ?>
         </form>
     </div>
 
-    <?php if ($esAdmin): ?>
-        <a href="admin.php" class="volver">🔙 Volver al Panel</a>
-    <?php else: ?>
-        <a href="login.php" class="volver">🔙 Volver al Login</a>
-    <?php endif; ?>
+    <a href="<?= $esAdmin ? 'Admin.php' : '../../Public/index.php' ?>" class="volver">🔙 Volver</a>
 </body>
 </html>

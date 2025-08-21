@@ -21,7 +21,7 @@
         <button type="submit">Ingresar</button>
 
         <div class="enlaces">
-            <a href="Registro_Usuario">Crear cuenta</a> | 
+            <a href="../app/view/Registrar_Usuario.php">Crear cuenta</a> | 
             <a href="recuperar_contraseña.php">¿Olvidaste tu contraseña?</a>
         </div>
     </form>

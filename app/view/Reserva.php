@@ -5,6 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
 require '../controllers/ReservaController.php';
 
 $nombreProfesor = $_SESSION['usuario'] ?? 'Invitado';
+
+// Fecha mínima y valor predeterminado en formato YYYY-MM-DD
+$fecha_min = date('Y-m-d'); // hoy
+$fecha_default = $fecha_min; // se puede cambiar a otro día del mismo mes si quieres
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +41,9 @@ $nombreProfesor = $_SESSION['usuario'] ?? 'Invitado';
         </select><br><br>
 
         <label>Fecha:</label>
-        <input type="date" name="fecha" required><br><br>
+        <input type="date" name="fecha" required 
+               min="<?= $fecha_min ?>" 
+               value="<?= $fecha_default ?>"><br><br>
 
         <label>Hora Inicio:</label>
         <input type="time" name="hora_inicio" required><br><br>
