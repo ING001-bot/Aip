@@ -8,10 +8,9 @@ class PrestamoModel {
         $this->db = $conexion;
     }
 
-    // Guardar múltiples préstamos con fecha manual
-    public function guardarPrestamosMultiple($id_usuario, $equipos, $fecha_prestamo, $hora_inicio, $hora_fin = null) {
-        if (!$id_usuario || empty($equipos)) {
-            return ['mensaje'=>'⚠ No se proporcionó usuario o equipos.','tipo'=>'error'];
+    public function guardarPrestamosMultiple($id_usuario, $equipos, $fecha_prestamo, $hora_inicio, $hora_fin = null, $id_aula) {
+        if (!$id_usuario || empty($equipos) || !$id_aula) {
+            return ['mensaje'=>'⚠ No se proporcionó usuario, equipos o aula.','tipo'=>'error'];
         }
 
         $this->db->beginTransaction();
@@ -21,8 +20,9 @@ class PrestamoModel {
                 VALUES (?, ?, ?, ?, 'Prestado', ?, ?)
             ");
 
-            foreach ($equipos as $id_equipo => $id_aula) {
-                if ($id_equipo) {
+            foreach ($equipos as $val) {
+                if ($val) {
+                    $id_equipo = $val; // ya recibimos solo id_equipo
                     $stmt->execute([$id_usuario, $id_equipo, $id_aula, $fecha_prestamo, $hora_inicio, $hora_fin]);
                 }
             }
@@ -35,7 +35,6 @@ class PrestamoModel {
         }
     }
 
-    // Listar equipos disponibles por tipo
     public function listarEquiposPorTipo($tipo) {
         $stmt = $this->db->prepare("
             SELECT id_equipo, nombre_equipo
@@ -49,10 +48,9 @@ class PrestamoModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Listar todos los préstamos con tipo aula y fecha devolución
     public function obtenerTodosPrestamos() {
         $stmt = $this->db->prepare("
-            SELECT p.id_prestamo, e.nombre_equipo, u.nombre, 
+            SELECT p.id_prestamo, e.nombre_equipo, e.tipo_equipo, u.nombre, 
                    a.nombre_aula, a.tipo,
                    p.fecha_prestamo, p.hora_inicio, p.hora_fin, 
                    p.fecha_devolucion, p.estado
@@ -66,7 +64,20 @@ class PrestamoModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Devolver equipo con fecha de devolución
+    public function listarPrestamosPorUsuario($id_usuario) {
+        if (!$id_usuario) return [];
+        $stmt = $this->db->prepare("
+            SELECT p.*, e.tipo_equipo, e.nombre_equipo, a.nombre_aula
+            FROM prestamos p
+            JOIN equipos e ON p.id_equipo = e.id_equipo
+            JOIN aulas a ON p.id_aula = a.id_aula
+            WHERE p.id_usuario = ?
+            ORDER BY p.fecha_prestamo DESC
+        ");
+        $stmt->execute([$id_usuario]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function devolverEquipo($id_prestamo) {
         $stmt = $this->db->prepare("
             UPDATE prestamos 

@@ -13,35 +13,33 @@ class ReservaController {
     }
 
     public function reservarAula($id_aula, $fecha, $hora_inicio, $hora_fin, $id_usuario) {
-    // 🔹 Validar límite de horario (hasta 18:35)
-    if ($hora_fin > "18:35") {
-        $this->mensaje = "⚠️ El horario excede la hora límite permitida (18:35).";
-        return false;
-    }
-
-    // 🔹 Validar que hora_inicio sea menor que hora_fin
-    if ($hora_inicio >= $hora_fin) {
-        $this->mensaje = "⚠️ La hora de inicio debe ser menor a la hora de fin.";
-        return false;
-    }
-
-    // 🔹 Verificar disponibilidad del aula
-    if ($this->model->verificarDisponibilidad($id_aula, $fecha, $hora_inicio, $hora_fin)) {
-        if ($this->model->crearReserva($id_aula, $id_usuario, $fecha, $hora_inicio, $hora_fin)) {
-            $this->mensaje = "✅ Reserva realizada correctamente.";
-            return true;
-        } else {
-            $this->mensaje = "❌ Error al realizar la reserva.";
+        // Validar límite horario
+        if ($hora_fin > "18:35") {
+            $this->mensaje = "⚠️ El horario excede la hora límite permitida (18:35).";
             return false;
         }
-    } else {
-        $this->mensaje = "⚠️ Aula ocupada en el horario seleccionado. Por favor elige otro horario.";
-        return false;
-    }
-}
 
-    public function obtenerAulas() {
-        return $this->model->obtenerAulas();
+        if ($hora_inicio >= $hora_fin) {
+            $this->mensaje = "⚠️ La hora de inicio debe ser menor a la hora de fin.";
+            return false;
+        }
+
+        if ($this->model->verificarDisponibilidad($id_aula, $fecha, $hora_inicio, $hora_fin)) {
+            if ($this->model->crearReserva($id_aula, $id_usuario, $fecha, $hora_inicio, $hora_fin)) {
+                $this->mensaje = "✅ Reserva realizada correctamente.";
+                return true;
+            } else {
+                $this->mensaje = "❌ Error al realizar la reserva.";
+                return false;
+            }
+        } else {
+            $this->mensaje = "⚠️ Aula ocupada en el horario seleccionado. Por favor elige otro horario.";
+            return false;
+        }
+    }
+
+    public function obtenerAulas($tipo = null) {
+        return $this->model->obtenerAulas($tipo);
     }
 
     public function obtenerReservas($id_usuario) {
@@ -70,5 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
 }
 
 $mensaje = $controller->mensaje;
-$aulas = $controller->obtenerAulas();
+// Solo traer aulas tipo AIP
+$aulas = $controller->obtenerAulas('AIP');
 $reservas = $controller->obtenerReservas($_SESSION['id_usuario']);

@@ -8,7 +8,7 @@ $nombreProfesor = $_SESSION['usuario'] ?? 'Invitado';
 
 // Fecha mínima y valor predeterminado en formato YYYY-MM-DD
 $fecha_min = date('Y-m-d'); // hoy
-$fecha_default = $fecha_min; // se puede cambiar a otro día del mismo mes si quieres
+$fecha_default = $fecha_min;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,7 +31,7 @@ $fecha_default = $fecha_min; // se puede cambiar a otro día del mismo mes si qu
         <label>Profesor:</label>
         <input type="text" value="<?= htmlspecialchars($nombreProfesor) ?>" readonly><br><br>
 
-        <label>Seleccionar Aula:</label>
+        <label>Seleccionar Aula (Solo AIP):</label>
         <select name="id_aula" required>
             <?php foreach ($aulas as $aula): ?>
                 <option value="<?= $aula['id_aula'] ?>">

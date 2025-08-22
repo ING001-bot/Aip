@@ -16,9 +16,15 @@ class ReservaModel {
         return $stmt->execute([$id_usuario, $id_aula, $fecha, $hora_inicio, $hora_fin]);
     }
 
-    // Obtener todas las aulas disponibles (ingresadas por el admin)
-    public function obtenerAulas() {
-        $stmt = $this->db->query("SELECT * FROM aulas");
+    // Obtener todas las aulas disponibles
+    // Filtrar por tipo si se indica
+    public function obtenerAulas($tipo = null) {
+        if ($tipo) {
+            $stmt = $this->db->prepare("SELECT * FROM aulas WHERE tipo = ?");
+            $stmt->execute([$tipo]);
+        } else {
+            $stmt = $this->db->query("SELECT * FROM aulas");
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -38,37 +44,25 @@ class ReservaModel {
     }
 
     // Verificar disponibilidad del aula
-// Verificar disponibilidad del aula
-public function verificarDisponibilidad($id_aula, $fecha, $hora_inicio, $hora_fin) {
-    // Validar rango permitido
-    $hora_min = "07:00:00";
-    $hora_max = "18:35:00";
+    public function verificarDisponibilidad($id_aula, $fecha, $hora_inicio, $hora_fin) {
+        $hora_min = "07:00:00";
+        $hora_max = "18:35:00";
 
-    if ($hora_inicio < $hora_min || $hora_fin > $hora_max) {
-        return false; // fuera de rango
+        if ($hora_inicio < $hora_min || $hora_fin > $hora_max) {
+            return false;
+        }
+
+        $query = "SELECT * FROM reservas 
+                  WHERE id_aula = :id_aula 
+                  AND fecha = :fecha
+                  AND (hora_inicio < :hora_fin AND hora_fin > :hora_inicio)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":id_aula", $id_aula);
+        $stmt->bindParam(":fecha", $fecha);
+        $stmt->bindParam(":hora_inicio", $hora_inicio);
+        $stmt->bindParam(":hora_fin", $hora_fin);
+        $stmt->execute();
+
+        return $stmt->rowCount() === 0;
     }
-
-    // Validar superposición con otras reservas del MISMO aula en la misma fecha
-    $query = "SELECT * FROM reservas 
-              WHERE id_aula = :id_aula 
-              AND fecha = :fecha
-              AND (
-                    (hora_inicio < :hora_fin AND hora_fin > :hora_inicio)
-                  )";
-
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(":id_aula", $id_aula);
-    $stmt->bindParam(":fecha", $fecha);
-    $stmt->bindParam(":hora_inicio", $hora_inicio);
-    $stmt->bindParam(":hora_fin", $hora_fin);
-    $stmt->execute();
-
-    // Si hay choques, no disponible
-    if ($stmt->rowCount() > 0) {
-        return false;
-    }
-
-    return true; // Disponible
-}
-
 }

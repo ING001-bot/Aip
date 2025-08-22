@@ -16,9 +16,15 @@ class AulaModel {
         ]);
     }
 
-    public function obtenerAulas() {
-        $sql = "SELECT * FROM aulas";
-        $stmt = $this->conexion->query($sql);
+    public function obtenerAulas($tipo = null) {
+        if ($tipo) {
+            $sql = "SELECT * FROM aulas WHERE tipo = :tipo ORDER BY nombre_aula ASC";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->execute([':tipo' => $tipo]);
+        } else {
+            $sql = "SELECT * FROM aulas ORDER BY nombre_aula ASC";
+            $stmt = $this->conexion->query($sql);
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

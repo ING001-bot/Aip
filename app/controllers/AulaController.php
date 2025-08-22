@@ -52,8 +52,8 @@ class AulaController {
         return $ok;
     }
 
-    public function listarAulas() {
-        return $this->model->obtenerAulas();
+    public function listarAulas($tipo = null) {
+        return $this->model->obtenerAulas($tipo);
     }
 }
 ?>

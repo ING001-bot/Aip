@@ -80,7 +80,7 @@ $id_editar = $_GET['editar'] ?? null; // Para editar inline
                         <td>
                             <input type="hidden" name="id_usuario" value="<?= $user['id_usuario'] ?>">
                             <button type="submit" name="editar_usuario">💾 Guardar</button>
-                            <a href="usuario.php">❌ Cancelar</a>
+                            <a href="Registrar_Usuario.php">❌ Cancelar</a>
                         </td>
                     </tr>
                 </form>
