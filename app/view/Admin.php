@@ -13,17 +13,20 @@ if ($rol !== 'Administrador') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>⚙ Panel de Administración</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙ Administración</title>
     <link rel="stylesheet" href="../../Public/css/admin.css">
 </head>
 <body>
-    <h1>⚙ Panel de Administración</h1>
+<main class="dashboard">
+    <h1>⚙ Administración</h1>
 
-    <nav class="menu-admin">
+    <nav class="menu-buttons">
         <a href="registrar_usuario.php">👤 Registrar Usuario</a>
         <a href="registrar_equipo.php">💻 Registrar Equipo</a>
         <a href="registrar_aula.php">🏫 Registrar Aula</a>
-        <a href="Dashboard.php" class="volver">🔙 Volver</a>
+        <a href="Dashboard.php" class="logout">🔙 Volver</a>
     </nav>
+</main>
 </body>
 </html>

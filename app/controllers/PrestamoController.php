@@ -9,8 +9,8 @@ class PrestamoController {
     }
 
     // Guardar múltiples préstamos
-    public function guardarPrestamosMultiple($id_usuario, $equipos, $hora_inicio, $hora_fin = null) {
-        return $this->model->guardarPrestamosMultiple($id_usuario, $equipos, $hora_inicio, $hora_fin);
+    public function guardarPrestamosMultiple($id_usuario, $equipos, $fecha_prestamo, $hora_inicio, $hora_fin = null) {
+        return $this->model->guardarPrestamosMultiple($id_usuario, $equipos, $fecha_prestamo, $hora_inicio, $hora_fin);
     }
 
     // Listar equipos disponibles por tipo
@@ -28,3 +28,4 @@ class PrestamoController {
         return $this->model->devolverEquipo($id_prestamo);
     }
 }
+?>

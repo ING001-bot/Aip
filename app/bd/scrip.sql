@@ -50,5 +50,9 @@ ADD COLUMN hora_fin TIME NULL AFTER hora_inicio;
 ALTER TABLE aulas
 ADD COLUMN tipo ENUM('AIP', 'REGULAR') NOT NULL DEFAULT 'REGULAR' AFTER capacidad;
 
-ALTER TABLE prestamo 
+ALTER TABLE prestamos 
 ADD COLUMN id_aula INT NOT NULL AFTER id_prestamo;
+
+ALTER TABLE prestamos 
+ADD CONSTRAINT fk_prestamos_aulas 
+FOREIGN KEY (id_aula) REFERENCES aulas(id_aula);

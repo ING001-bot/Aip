@@ -6,12 +6,13 @@ class AulaModel {
         $this->conexion = $conexion;
     }
 
-    public function crearAula($nombre, $capacidad) {
-        $sql = "INSERT INTO aulas (nombre_aula, capacidad) VALUES (:nombre, :capacidad)";
+    public function crearAula($nombre, $capacidad, $tipo) {
+        $sql = "INSERT INTO aulas (nombre_aula, capacidad, tipo) VALUES (:nombre, :capacidad, :tipo)";
         $stmt = $this->conexion->prepare($sql);
         return $stmt->execute([
             ':nombre' => $nombre,
-            ':capacidad' => $capacidad
+            ':capacidad' => $capacidad,
+            ':tipo' => $tipo
         ]);
     }
 
@@ -21,18 +22,19 @@ class AulaModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function actualizarAula($id, $nombre, $capacidad) {
-        $sql = "UPDATE aulas SET nombre_aula = :nombre, capacidad = :capacidad WHERE id = :id";
+    public function actualizarAula($id, $nombre, $capacidad, $tipo) {
+        $sql = "UPDATE aulas SET nombre_aula = :nombre, capacidad = :capacidad, tipo = :tipo WHERE id_aula = :id";
         $stmt = $this->conexion->prepare($sql);
         return $stmt->execute([
             ':nombre' => $nombre,
             ':capacidad' => $capacidad,
+            ':tipo' => $tipo,
             ':id' => $id
         ]);
     }
 
     public function eliminarAula($id) {
-        $sql = "DELETE FROM aulas WHERE id = :id";
+        $sql = "DELETE FROM aulas WHERE id_aula = :id";
         $stmt = $this->conexion->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }

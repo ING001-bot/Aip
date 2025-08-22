@@ -9,25 +9,25 @@ class EquipoModel {
         $this->db = $conexion;
     }
 
-    // Registrar un equipo (no bloquea duplicados)
     public function registrarEquipo($nombre_equipo, $tipo_equipo) {
-        $stmt = $this->db->prepare(
-            "INSERT INTO equipos (nombre_equipo, tipo_equipo) VALUES (?, ?)"
-        );
+        $stmt = $this->db->prepare("INSERT INTO equipos (nombre_equipo, tipo_equipo) VALUES (?, ?)");
         return $stmt->execute([$nombre_equipo, $tipo_equipo]);
     }
 
-    // Obtener todos los equipos
     public function obtenerEquipos() {
         $stmt = $this->db->prepare("SELECT * FROM equipos");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Eliminar equipo
     public function eliminarEquipo($id_equipo) {
         $stmt = $this->db->prepare("DELETE FROM equipos WHERE id_equipo = ?");
         return $stmt->execute([$id_equipo]);
+    }
+
+    public function actualizarEquipo($id_equipo, $nombre_equipo, $tipo_equipo) {
+        $stmt = $this->db->prepare("UPDATE equipos SET nombre_equipo = ?, tipo_equipo = ? WHERE id_equipo = ?");
+        return $stmt->execute([$nombre_equipo, $tipo_equipo, $id_equipo]);
     }
 }
 ?>
